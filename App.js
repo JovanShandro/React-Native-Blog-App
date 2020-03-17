@@ -21,7 +21,7 @@ const options = {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Show">
         <Stack.Screen name="Home" component={Home} options={options} />
         <Stack.Screen name="New" component={New} options={options} />
         <Stack.Screen name="Edit" component={Edit} options={options} />
