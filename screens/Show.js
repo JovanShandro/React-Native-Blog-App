@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#0000",
     backgroundColor: "#0000", // invisible color
-    width: "80%"
+    width: "80%",
+    maxWidth: 325
   },
   image: {
     alignSelf: "center",
