@@ -26,7 +26,7 @@ const initialState = {
 };
 
 const postsReducer = (state = initialState, action) => {
-  switch (action) {
+  switch (action.type) {
     case "UPDATE":
       break;
     case "ADD":
