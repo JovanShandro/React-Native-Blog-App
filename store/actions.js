@@ -1,4 +1,4 @@
-const update = (id, updates) => {
+export const updatePost = (id, updates) => {
   return {
     type: "UPDATE",
     id,
@@ -6,29 +6,27 @@ const update = (id, updates) => {
   };
 };
 
-const add = () => {
+export const addPost = () => {
   return {
     type: "ADD"
   };
 };
 
-const delete = id => {
+export const deletePost = id => {
   return {
     type: "DELETE",
     id
   };
 };
 
-const signin = () => {
+export const signin = () => {
   return {
     type: "SIGN_IN"
   };
 };
 
-const signout = () => {
+export const signout = () => {
   return {
     type: "SIGN_OUT"
   };
 };
-
-export { delete, update, add, signout, signin };

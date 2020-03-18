@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#0000", // invisible color
     width: "80%",
     maxWidth: 325,
-    alignSelf: "center"
+    alignSelf: "center",
+    marginBottom: 30
   },
   image: {
     alignSelf: "center",

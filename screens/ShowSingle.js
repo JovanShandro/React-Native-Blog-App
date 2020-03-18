@@ -7,38 +7,51 @@ import {
   Image,
   Button
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { deletePost } from "../store/actions";
 
 const ShowSingle = ({ route, navigation }) => {
   const { item } = route.params;
   const post = useSelector(store => store.posts[item]);
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scroll}>
-        <View style={styles.post}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: post.image
-            }}
-          />
-          <Text style={styles.title}>{post.title}</Text>
-          <Text style={styles.description}>{post.description}</Text>
-          <View style={styles.buttons}>
-            <View style={styles.singleButton}>
-              <Button
-                color="orange"
-                title="Edit"
-                onPress={() => navigation.navigate("Edit")}
-              />
-            </View>
-            <View style={styles.singleButton}>
-              <Button color="red" title="Delete" onPress={() => {}} />
+      {typeof post != "undefined" ? (
+        <ScrollView style={styles.scroll}>
+          <View style={styles.post}>
+            <Image
+              style={styles.image}
+              source={{
+                uri: post.image
+              }}
+            />
+            <Text style={styles.title}>{post.title}</Text>
+            <Text style={styles.description}>{post.description}</Text>
+            <View style={styles.buttons}>
+              <View style={styles.singleButton}>
+                <Button
+                  color="orange"
+                  title="Edit"
+                  onPress={() => navigation.navigate("Edit")}
+                />
+              </View>
+              <View style={styles.singleButton}>
+                <Button
+                  color="red"
+                  title="Delete"
+                  onPress={() => {
+                    dispatch(deletePost(item));
+                    return navigation.navigate("Show");
+                  }}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      ) : (
+        <Text></Text>
+      )}
     </View>
   );
 };
