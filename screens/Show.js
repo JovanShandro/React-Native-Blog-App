@@ -6,6 +6,7 @@ const Show = ({ navigation }) => {
   const posts = useSelector(state => state.posts);
 
   const shortenDesc = desc => {
+    if (desc.length <= 155) return desc;
     return desc.slice(0, 155) + "...";
   };
 

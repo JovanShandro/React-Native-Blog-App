@@ -33,7 +33,7 @@ const ShowSingle = ({ route, navigation }) => {
                 <Button
                   color="orange"
                   title="Edit"
-                  onPress={() => navigation.navigate("Edit")}
+                  onPress={() => navigation.navigate("Edit", { item })}
                 />
               </View>
               <View style={styles.singleButton}>

@@ -30,7 +30,12 @@ const initialState = {
 const postsReducer = (state = initialState, action) => {
   switch (action.type) {
     case "UPDATE":
-      break;
+      return R.set(
+        R.lensProp(action.id),
+        R.merge(R.prop(action.id)(state), action.updates),
+        state
+      );
+      return state;
     case "ADD":
       break;
     case "DELETE":
