@@ -1,27 +1,32 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { StyleSheet, Text, View, Image, Button, FlatList } from "react-native";
+import { useSelector } from "react-redux";
 
 const Show = () => {
+  const posts = useSelector(state => state.posts);
+
   return (
     <View style={styles.container}>
-      <View style={styles.post}>
-        <Image
-          style={styles.image}
-          source={{
-            uri:
-              "https://cdn.thewirecutter.com/wp-content/uploads/2018/07/laptops-under-500-lowres-9990.jpg"
-          }}
-        />
-        <Text style={styles.title}>Newest macbook Pro!!</Text>
-        <Text style={styles.description}>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-          nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-          sed diam voluptua...
-        </Text>
-        <View style={styles.button}>
-          <Button color="#9f79ee" title="Read More" />
-        </View>
-      </View>
+      <FlatList
+        style={{ width: "100%" }}
+        data={Object.keys(posts)}
+        keyExtractor={item => item}
+        renderItem={({ item }) => (
+          <View style={styles.post}>
+            <Image
+              style={styles.image}
+              source={{
+                uri: posts[item].image
+              }}
+            />
+            <Text style={styles.title}>{posts[item].title}</Text>
+            <Text style={styles.description}>{posts[item].description}</Text>
+            <View style={styles.button}>
+              <Button color="#9f79ee" title="Read More" />
+            </View>
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -42,15 +47,15 @@ const styles = StyleSheet.create({
     borderColor: "#0000",
     backgroundColor: "#0000", // invisible color
     width: "80%",
-    maxWidth: 325
+    maxWidth: 325,
+    alignSelf: "center"
   },
   image: {
     alignSelf: "center",
     height: 180,
-    marginTop: 5,
     width: "95%",
     paddingHorizontal: 10,
-    marginTop: 10
+    marginTop: 15
   },
   title: {
     fontWeight: "bold",
