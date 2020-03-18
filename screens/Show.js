@@ -2,8 +2,12 @@ import React from "react";
 import { StyleSheet, Text, View, Image, Button, FlatList } from "react-native";
 import { useSelector } from "react-redux";
 
-const Show = () => {
+const Show = ({ navigation }) => {
   const posts = useSelector(state => state.posts);
+
+  const shortenDesc = desc => {
+    return desc.slice(0, 155) + "...";
+  };
 
   return (
     <View style={styles.container}>
@@ -20,9 +24,15 @@ const Show = () => {
               }}
             />
             <Text style={styles.title}>{posts[item].title}</Text>
-            <Text style={styles.description}>{posts[item].description}</Text>
+            <Text style={styles.description}>
+              {shortenDesc(posts[item].description)}
+            </Text>
             <View style={styles.button}>
-              <Button color="#9f79ee" title="Read More" />
+              <Button
+                color="#9f79ee"
+                title="Read More"
+                onPress={() => navigation.navigate("ShowSingle", { item })}
+              />
             </View>
           </View>
         )}

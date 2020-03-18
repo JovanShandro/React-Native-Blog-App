@@ -6,6 +6,7 @@ import Home from "./screens/Home";
 import Edit from "./screens/Edit";
 import Show from "./screens/Show";
 import New from "./screens/New";
+import ShowSingle from "./screens/ShowSingle";
 import IconTitle from "./components/IconTitle";
 import { createStore } from "redux";
 import allReducers from "./store/reducers";
@@ -33,6 +34,11 @@ export default function App() {
           <Stack.Screen name="New" component={New} options={options} />
           <Stack.Screen name="Edit" component={Edit} options={options} />
           <Stack.Screen name="Show" component={Show} options={options} />
+          <Stack.Screen
+            name="ShowSingle"
+            component={ShowSingle}
+            options={options}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
