@@ -27,6 +27,8 @@ const initialState = {
   }
 };
 
+let id = 3;
+
 const postsReducer = (state = initialState, action) => {
   switch (action.type) {
     case "UPDATE":
@@ -35,9 +37,14 @@ const postsReducer = (state = initialState, action) => {
         R.merge(R.prop(action.id)(state), action.updates),
         state
       );
-      return state;
     case "ADD":
-      break;
+      id++;
+      const { title, image, description } = action.data;
+      return R.set(
+        R.lensProp(id),
+        { id: id.toString(), title, description, image },
+        state
+      );
     case "DELETE":
       return R.reject(R.pipe(R.prop("id"), R.equals(action.id)), state);
     default:

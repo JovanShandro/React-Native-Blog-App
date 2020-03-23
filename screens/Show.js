@@ -14,7 +14,7 @@ const Show = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         style={{ width: "100%" }}
-        data={Object.keys(posts)}
+        data={Object.keys(posts).sort((a, b) => b - a)}
         keyExtractor={item => item}
         renderItem={({ item }) => (
           <View style={styles.post}>

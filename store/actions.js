@@ -6,9 +6,10 @@ export const updatePost = (id, updates) => {
   };
 };
 
-export const addPost = () => {
+export const addPost = data => {
   return {
-    type: "ADD"
+    type: "ADD",
+    data
   };
 };
 
