@@ -1,9 +1,14 @@
+import { firebaseAuth } from "../../lib/firebase";
+
 const loggedReducer = (state = false, action) => {
   switch (action.type) {
-    case "SIGN_IN":
+    case "LOGIN":
       return true;
-    case "SIGN_OUT":
+    case "LOGOUT":
+      firebaseAuth.signOut();
       return false;
+    case "AUTH_STATE_CHANGE":
+      return state;
     default:
       return state;
   }

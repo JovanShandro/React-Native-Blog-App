@@ -1,3 +1,4 @@
+//Posts
 export const updatePost = (id, updates) => {
   return {
     type: "UPDATE",
@@ -20,14 +21,22 @@ export const deletePost = id => {
   };
 };
 
-export const signin = () => {
+//Auth
+
+export const loginUser = () => {
   return {
-    type: "SIGN_IN"
+    type: "LOGIN"
   };
 };
 
-export const signout = () => {
+export const logoutUser = () => {
   return {
-    type: "SIGN_OUT"
+    type: "LOGOUT"
   };
 };
+
+//export const handleAuthStateChange = () => {
+//return {
+//type: "AUTH_STATE_CHANGE"
+//};
+//};
