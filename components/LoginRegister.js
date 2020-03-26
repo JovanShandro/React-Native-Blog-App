@@ -77,7 +77,6 @@ const LoginRegister = ({ navigation, tab }) => {
 
   const handleSubmit = () => {
     setErrorMessage("");
-    console.log(tab, tab === "Register");
     if (tab === "Log In") {
       firebaseAuth
         .signInWithEmailAndPassword(email, password)

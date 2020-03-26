@@ -5,10 +5,7 @@ const loggedReducer = (state = false, action) => {
     case "LOGIN":
       return true;
     case "LOGOUT":
-      firebaseAuth.signOut();
       return false;
-    case "AUTH_STATE_CHANGE":
-      return state;
     default:
       return state;
   }

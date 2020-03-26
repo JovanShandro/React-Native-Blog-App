@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, Button, FlatList } from "react-native";
 import { useSelector } from "react-redux";
+import { firebaseDb, firebaseAuth } from "../store/actions";
+import { getPosts } from "../store/actions";
+import * as R from "ramda";
 
 const Show = ({ navigation }) => {
   const posts = useSelector(state => state.posts);
@@ -12,32 +15,46 @@ const Show = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        style={{ width: "100%" }}
-        data={Object.keys(posts).sort((a, b) => b - a)}
-        keyExtractor={item => item}
-        renderItem={({ item }) => (
-          <View style={styles.post}>
-            <Image
-              style={styles.image}
-              source={{
-                uri: posts[item].image
-              }}
-            />
-            <Text style={styles.title}>{posts[item].title}</Text>
-            <Text style={styles.description}>
-              {shortenDesc(posts[item].description)}
-            </Text>
-            <View style={styles.button}>
-              <Button
-                color="#9f79ee"
-                title="Read More"
-                onPress={() => navigation.navigate("ShowSingle", { item })}
+      {R.isEmpty(posts) ? (
+        <View style={styles.noPosts}>
+          <Text style={styles.noPostsText}>
+            You have no posts for the moment!
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          style={{ width: "100%" }}
+          data={R.pipe(
+            R.toPairs,
+            R.map(([id, other]) => R.merge(other, { id })),
+            R.sort(R.descend(R.prop("date")))
+          )(posts)}
+          keyExtractor={item => item}
+          renderItem={({ item }) => (
+            <View style={styles.post}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: item.image
+                }}
               />
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.description}>
+                {shortenDesc(item.description)}
+              </Text>
+              <View style={styles.button}>
+                <Button
+                  color="#9f79ee"
+                  title="Read More"
+                  onPress={() =>
+                    navigation.navigate("ShowSingle", { item: item.id })
+                  }
+                />
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -48,6 +65,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center"
   },
+  noPosts: {
+    flex: 1,
+    width: 190,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  noPostsText: {
+    fontWeight: "bold",
+    fontSize: 23,
+    textAlign: "center"
+  },
   post: {
     marginTop: 20,
     shadowOffset: { width: 10, height: 10 },
@@ -56,7 +84,7 @@ const styles = StyleSheet.create({
     elevation: 7,
     borderWidth: 1,
     borderColor: "#0000",
-    backgroundColor: "#0000", // invisible color
+    backgroundColor: "#0000",
     width: "80%",
     maxWidth: 325,
     alignSelf: "center",

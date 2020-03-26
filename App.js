@@ -1,10 +1,11 @@
 import React from "react";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import allReducers from "./store/reducers";
 import { Provider } from "react-redux";
 import Navigator from "./Navigator";
+import thunk from "redux-thunk";
 
-const store = createStore(allReducers);
+const store = createStore(allReducers, applyMiddleware(thunk));
 
 export default function App() {
   return (

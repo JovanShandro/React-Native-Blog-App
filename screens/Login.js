@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, SafeAreaView } from "react-native";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import LoginRegister from "../components/LoginRegister";
+import { firebaseAuth } from "../lib/firebase";
 
 const renderTabBar = props => (
   <TabBar
@@ -17,6 +18,10 @@ const LoginScreen = ({ navigation }) => {
     { key: "login", title: "Login" },
     { key: "register", title: "Register" }
   ]);
+
+  useEffect(() => {
+    firebaseAuth.signOut();
+  }, []);
 
   return (
     <SafeAreaView

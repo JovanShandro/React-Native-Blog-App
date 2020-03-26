@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,14 +14,26 @@ import Login from "./screens/Login";
 import ShowSingle from "./screens/ShowSingle";
 import IconTitle from "./components/IconTitle";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
-import { logoutUser } from "./store/actions";
+import { logoutUser, getPosts, clearPosts } from "./store/actions";
+import { firebaseAuth } from "./lib/firebase";
 
 const Stack = createStackNavigator();
 
 export default function Navigator() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(store => store.isLoggedIn);
-  console.log("Now is ", isLoggedIn);
+
+  useEffect(() => {
+    firebaseAuth.onAuthStateChanged(function(user) {
+      if (user) {
+        // user is signed in
+        dispatch(getPosts());
+      } else {
+        //user is signing out
+        dispatch(clearPosts());
+      }
+    });
+  }, []);
 
   const handleLogout = () => {
     Alert.alert(
@@ -34,7 +46,10 @@ export default function Navigator() {
         },
         {
           text: "OK",
-          onPress: () => dispatch(logoutUser()),
+          onPress: () => {
+            dispatch(logoutUser());
+            firebaseAuth.signOut();
+          },
           style: "destructive"
         }
       ],

@@ -8,7 +8,7 @@ import {
   Button
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { deletePost } from "../store/actions";
+import { fbDeletePost } from "../store/actions";
 
 const ShowSingle = ({ route, navigation }) => {
   const { item } = route.params;
@@ -41,8 +41,9 @@ const ShowSingle = ({ route, navigation }) => {
                   color="red"
                   title="Delete"
                   onPress={() => {
-                    dispatch(deletePost(item));
-                    return navigation.navigate("Show");
+                    dispatch(fbDeletePost(item)).then(() => {
+                      navigation.goBack();
+                    });
                   }}
                 />
               </View>

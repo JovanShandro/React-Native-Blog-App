@@ -13,7 +13,8 @@ import {
   UIManager
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { addPost } from "../store/actions";
+import { fbAddPost } from "../store/actions";
+import { currentDate } from "../lib/util";
 
 const { State: TextInputState } = TextInput;
 
@@ -74,7 +75,7 @@ const NewScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    dispatch(addPost({ title, description, image }));
+    dispatch(fbAddPost({ title, description, image, date: currentDate() }));
     navigation.goBack();
   };
 

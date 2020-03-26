@@ -1,52 +1,24 @@
 import * as R from "ramda";
+import { firebaseDb, firebaseAuth } from "../../lib/firebase";
 
-const initialState = {
-  0: {
-    id: "0",
-    image:
-      "https://cdn.thewirecutter.com/wp-content/uploads/2018/07/laptops-under-500-lowres-9990.jpg",
-    title: "Newest Macbook Pro!!",
-    description:
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-  },
-  1: {
-    id: "1",
-    image:
-      "https://pix6.agoda.net/hotelImages/41483/-1/aab9e70361132c8cd6d5d2baa4a68002.jpg?s=1024x768",
-    title: "The Best Vacation!",
-    description:
-      "LLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.:orem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-  },
-  2: {
-    id: "2",
-    image:
-      "https://i.pinimg.com/originals/6b/bd/d2/6bbdd2fa99868367453b6bbb02de6346.png",
-    title: "Managing Time efficently",
-    description:
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-  }
-};
-
-let id = 3;
+const initialState = {};
 
 const postsReducer = (state = initialState, action) => {
   switch (action.type) {
     case "UPDATE":
       return R.set(
         R.lensProp(action.id),
-        R.merge(R.prop(action.id)(state), action.updates),
-        state
-      );
-    case "ADD":
-      id++;
-      const { title, image, description } = action.data;
-      return R.set(
-        R.lensProp(id),
-        { id: id.toString(), title, description, image },
+        R.mergeRight(R.prop(action.id)(state), action.updates),
         state
       );
     case "DELETE":
-      return R.reject(R.pipe(R.prop("id"), R.equals(action.id)), state);
+      const stateCopy = JSON.parse(JSON.stringify(state));
+      delete stateCopy[action.id];
+      return stateCopy;
+    case "ADD":
+      return R.mergeRight(state, { [action.id]: action.post });
+    case "CLEAR_POSTS":
+      return {};
     default:
       return state;
   }

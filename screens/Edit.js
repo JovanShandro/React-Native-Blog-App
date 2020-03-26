@@ -13,7 +13,7 @@ import {
   UIManager
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { updatePost } from "../store/actions";
+import { fbUpdatePost } from "../store/actions";
 
 const { State: TextInputState } = TextInput;
 
@@ -77,7 +77,7 @@ const Edit = ({ route, navigation }) => {
   };
 
   const handleSubmit = () => {
-    dispatch(updatePost(item, { title, description, image }));
+    dispatch(fbUpdatePost(item, { title, description, image }));
     navigation.goBack();
   };
 
