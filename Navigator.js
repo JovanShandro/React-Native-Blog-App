@@ -13,7 +13,7 @@ import Login from "./screens/Login";
 import ShowSingle from "./screens/ShowSingle";
 import IconTitle from "./components/IconTitle";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
-import { logoutUser, getPosts, clearPosts } from "./store/actions";
+import { logoutUser, clearPosts, firebaseEvents } from "./store/actions";
 import { firebaseAuth } from "./lib/firebase";
 
 const Stack = createStackNavigator();
@@ -26,7 +26,7 @@ export default function Navigator() {
     firebaseAuth.onAuthStateChanged(function(user) {
       if (user) {
         // user is signed in
-        dispatch(getPosts());
+        dispatch(firebaseEvents());
       } else {
         //user is signing out
         dispatch(clearPosts());
@@ -46,8 +46,8 @@ export default function Navigator() {
         {
           text: "OK",
           onPress: () => {
-            dispatch(logoutUser());
             firebaseAuth.signOut();
+            dispatch(logoutUser());
           },
           style: "destructive"
         }

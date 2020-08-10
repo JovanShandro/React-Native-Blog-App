@@ -1,7 +1,7 @@
 import { firebaseDb, firebaseAuth } from "../lib/firebase";
 
 //Posts
-const updatePost = (id, updates) => {
+export const updatePost = (id, updates) => {
   return {
     type: "UPDATE",
     id,
@@ -9,14 +9,14 @@ const updatePost = (id, updates) => {
   };
 };
 
-const deletePost = id => {
+export const deletePost = id => {
   return {
     type: "DELETE",
     id
   };
 };
 
-const addPost = (id, post) => {
+export const addPost = (id, post) => {
   return {
     type: "ADD",
     id,
@@ -24,47 +24,46 @@ const addPost = (id, post) => {
   };
 };
 
-const clearPosts = () => {
+export const clearPosts = () => {
   return {
     type: "CLEAR_POSTS"
   };
 };
 
 //Auth
-const loginUser = () => {
+export const loginUser = () => {
   return {
     type: "LOGIN"
   };
 };
 
-const logoutUser = () => {
+export const logoutUser = () => {
   return {
     type: "LOGOUT"
   };
 };
 
-// Async Action creaters
-const getPosts = () => async dispatch => {
-  let userPosts;
-  userPosts = await firebaseDb.ref("posts/" + firebaseAuth.currentUser.uid);
-  userPosts
-    .on("child_added", snapshot => {
-      const post = snapshot.val();
-      const id = snapshot.key;
-      dispatch(addPost(id, post));
-    })
-    .catch(err => console.log(err.message));
-  // child changed
-  userPosts
-    .on("child_changed", snapshot => {
-      const post = snapshot.val();
-      const id = snapshot.key;
-      dispatch(updatePost(id, post));
-    })
-    .catch(err => console.log(err.message));
+export const firebaseEvents = () => async dispatch => {
+  const ref = await firebaseDb.ref("posts/" + firebaseAuth.currentUser.uid);
+  ref.on("child_added", snapshot => {
+    const post = snapshot.val();
+    const id = snapshot.key;
+    dispatch(addPost(id, post));
+  });
+
+  ref.on("child_changed", snapshot => {
+    const post = snapshot.val();
+    const id = snapshot.key;
+    dispatch(updatePost(id, post));
+  });
+
+  ref.on("child_removed", snapshot => {
+    const id = snapshot.key;
+    dispatch(deletePost(id));
+  });
 };
 
-const fbAddPost = data => async dispatch => {
+export const fbAddPost = data => async () => {
   // call twice to make almost sure not same id generated twice
   const randomId =
     Math.random()
@@ -78,50 +77,36 @@ const fbAddPost = data => async dispatch => {
     "posts/" + firebaseAuth.currentUser.uid + "/" + randomId
   );
 
-  ref.set(data, err => {
-    if (err) {
-      console.log(err.message);
-    }
-  });
+  try {
+    await ref.set(data);
+  } catch (e) {
+    /* handle error */
+    console.log(e.message);
+  }
 };
 
-const fbDeletePost = id => async dispatch => {
+export const fbDeletePost = id => async () => {
   const ref = firebaseDb.ref(
     "posts/" + firebaseAuth.currentUser.uid + "/" + id
   );
 
-  ref.remove(err => {
-    if (err) {
-      console.log(err.message);
-    } else {
-      dispatch(deletePost(id));
-    }
-  });
+  try {
+    await ref.remove();
+  } catch (e) {
+    /* handle error */
+    console.log(e.message);
+  }
 };
 
-const fbUpdatePost = (id, updates) => async dispatch => {
+export const fbUpdatePost = (id, updates) => async () => {
   const ref = firebaseDb.ref(
     "posts/" + firebaseAuth.currentUser.uid + "/" + id
   );
 
-  ref.update(updates, err => {
-    if (err) {
-      console.log(err.message);
-    } else {
-      dispatch(updatePost(id, updates));
-    }
-  });
-};
-
-export {
-  getPosts,
-  logoutUser,
-  loginUser,
-  deletePost,
-  updatePost,
-  addPost,
-  clearPosts,
-  fbAddPost,
-  fbDeletePost,
-  fbUpdatePost
+  try {
+    await ref.update(updates);
+  } catch (e) {
+    /* handle error */
+    console.log(e.message);
+  }
 };
