@@ -19,29 +19,29 @@ const LoginRegister = ({ tab }) => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setErrorMessage("");
     if (tab === "Log In") {
-      firebaseAuth
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          dispatch(loginUser());
-        })
-        .catch(error => setErrorMessage(error.message));
+      try {
+        await firebaseAuth.signInWithEmailAndPassword(email, password);
+        dispatch(loginUser());
+      } catch (e) {
+        /* handle error */
+        setErrorMessage(e.message);
+      }
     } else if (tab === "Register") {
-      firebaseAuth
-        .createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          dispatch(loginUser());
-        })
-        .catch(error => setErrorMessage(error.message));
+      try {
+        await firebaseAuth.createUserWithEmailAndPassword(email, password);
+        dispatch(loginUser());
+      } catch (e) {
+        /* handle error */
+        setErrorMessage(e.message);
+      }
     }
   };
 
-  const changeDisplay = () => {
-    return {
-      display: errorMessage.length ? "flex" : "none"
-    };
+  const changeDisplay = {
+    display: errorMessage.length ? "flex" : "none"
   };
 
   return (
@@ -52,7 +52,7 @@ const LoginRegister = ({ tab }) => {
       <TouchableOpacity activeOpacity={1} onPress={() => Keyboard.dismiss()}>
         <View style={styles.form}>
           <Text style={styles.header}>{tab}</Text>
-          <Text style={[styles.error, changeDisplay()]}>{errorMessage}</Text>
+          <Text style={[styles.error, changeDisplay]}>{errorMessage}</Text>
           <View style={styles.section}>
             <Text style={styles.label}>Email</Text>
             <TextInput
