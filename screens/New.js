@@ -1,78 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
+  ScrollView,
   Text,
   TextInput,
   Button,
   View,
   Keyboard,
   TouchableOpacity,
-  ScrollView,
-  Dimensions,
-  Animated,
-  UIManager
+  KeyboardAvoidingView
 } from "react-native";
 import { useDispatch } from "react-redux";
+import { useHeaderHeight } from "@react-navigation/stack";
 import { fbAddPost } from "../store/actions";
 import { currentDate } from "../lib/util";
-
-const { State: TextInputState } = TextInput;
 
 const NewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
-  const [shift, setShift] = useState(new Animated.Value(0));
   const [description, setDescription] = useState("");
-  const [AreaInputHeight, setAreaInputHeight] = useState(0);
 
-  let keyboardDidShowSub, keyboardDidHideSub;
-
-  useEffect(() => {
-    keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      handleKeyboardDidShow
-    );
-    keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      handleKeyboardDidHide
-    );
-
-    return () => {
-      keyboardDidShowSub.remove();
-      keyboardDidHideSub.remove();
-    };
-  }, []);
-
-  const handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap = windowHeight - keyboardHeight - (fieldTop + fieldHeight);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(shift, {
-          toValue: gap,
-          duration: 1000,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  const handleKeyboardDidHide = () => {
-    Animated.timing(shift, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true
-    }).start();
-  };
+  const headerHeight = useHeaderHeight();
 
   const handleSubmit = () => {
     dispatch(fbAddPost({ title, description, image, date: currentDate() }));
@@ -80,11 +29,17 @@ const NewScreen = ({ navigation }) => {
   };
 
   return (
-    <Animated.View
-      style={[styles.container, { transform: [{ translateY: shift }] }]}
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={headerHeight}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={[styles.container, styles.whiteBackground]}
     >
-      <ScrollView style={styles.scrollview}>
-        <TouchableOpacity activeOpacity={1} onPress={() => Keyboard.dismiss()}>
+      <ScrollView style={styles.container}>
+        <TouchableOpacity
+          style={styles.container}
+          activeOpacity={1}
+          onPress={() => Keyboard.dismiss()}
+        >
           <View style={styles.form}>
             <Text style={styles.header}>Create New Post</Text>
             <View style={styles.section}>
@@ -131,27 +86,22 @@ const NewScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </ScrollView>
-    </Animated.View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%"
+    flex: 1
   },
-  scrollview: {
-    width: "100%",
-    maxWidth: 400
+  whiteBackground: {
+    backgroundColor: "#fff"
   },
   form: {
+    flex: 1,
     width: "80%",
     maxWidth: 380,
     alignSelf: "center",
-    borderWidth: 1,
     borderColor: "#1b1c1d83",
     borderRadius: 10,
     padding: 20,
@@ -171,7 +121,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   input: {
-    borderWidth: 0.5,
+    borderWidth: 1,
     padding: 1,
     borderRadius: 20,
     paddingHorizontal: 10,
@@ -179,10 +129,11 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   areaInput: {
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderRadius: 20,
     padding: 10,
-    textAlignVertical: "top"
+    textAlignVertical: "top",
+    marginBottom: 20
   },
   buttons: {
     flexDirection: "row",
