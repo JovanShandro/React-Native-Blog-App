@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
+  ScrollView,
   TextInput,
   Button,
   View,
   Keyboard,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-  Animated,
-  UIManager
+  KeyboardAvoidingView,
+  TouchableOpacity
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { fbUpdatePost } from "../store/actions";
-
-const { State: TextInputState } = TextInput;
+import { useHeaderHeight } from "@react-navigation/stack";
 
 const Edit = ({ route, navigation }) => {
   const { item } = route.params;
@@ -23,70 +20,27 @@ const Edit = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState(post.title);
   const [image, setImage] = useState(post.image);
-  const [shift, setShift] = useState(new Animated.Value(0));
   const [description, setDescription] = useState(post.description);
-  const [AreaInputHeight, setAreaInputHeight] = useState(0);
-  const [lines, setLines] = useState(1);
-
-  let keyboardDidShowSub, keyboardDidHideSub;
-
-  useEffect(() => {
-    keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      handleKeyboardDidShow
-    );
-    keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      handleKeyboardDidHide
-    );
-
-    return () => {
-      keyboardDidShowSub.remove();
-      keyboardDidHideSub.remove();
-    };
-  }, []);
-
-  const handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap = windowHeight - keyboardHeight - (fieldTop + fieldHeight);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(shift, {
-          toValue: gap,
-          duration: 1000,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  const handleKeyboardDidHide = () => {
-    Animated.timing(shift, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true
-    }).start();
-  };
 
   const handleSubmit = () => {
     dispatch(fbUpdatePost(item, { title, description, image }));
     navigation.goBack();
   };
 
+  const headerHeight = useHeaderHeight();
+
   return (
-    <Animated.View
-      style={[styles.container, { transform: [{ translateY: shift }] }]}
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={headerHeight}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={[styles.container, styles.whiteBackground]}
     >
-      <ScrollView style={styles.scrollview}>
-        <TouchableOpacity activeOpacity={1} onPress={() => Keyboard.dismiss()}>
+      <ScrollView style={styles.container}>
+        <TouchableOpacity
+          style={styles.container}
+          activeOpacity={1}
+          onPress={() => Keyboard.dismiss()}
+        >
           <View style={styles.form}>
             <Text style={styles.header}>Edit Post</Text>
             <View style={styles.section}>
@@ -133,27 +87,21 @@ const Edit = ({ route, navigation }) => {
           </View>
         </TouchableOpacity>
       </ScrollView>
-    </Animated.View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%"
+    flex: 1
   },
-  scrollview: {
-    width: "100%",
-    maxWidth: 400
+  whiteBackground: {
+    backgroundColor: "#fff"
   },
   form: {
-    width: "80%",
+    flex: 1,
     maxWidth: 380,
     alignSelf: "center",
-    borderWidth: 1,
     borderColor: "#1b1c1d83",
     borderRadius: 10,
     padding: 20,
@@ -173,18 +121,19 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   input: {
-    borderWidth: 0.5,
+    borderWidth: 1,
     padding: 1,
-    borderRadius: 20,
+    borderRadius: 5,
     paddingHorizontal: 10,
     borderColor: "gray",
     marginBottom: 15
   },
   areaInput: {
     borderWidth: 0.5,
-    borderRadius: 20,
+    borderRadius: 5,
     padding: 10,
-    textAlignVertical: "top"
+    textAlignVertical: "top",
+    marginBottom: 20
   },
   buttons: {
     flexDirection: "row",
