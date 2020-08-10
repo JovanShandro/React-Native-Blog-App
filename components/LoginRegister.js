@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,73 +7,17 @@ import {
   View,
   Keyboard,
   TouchableOpacity,
-  ScrollView,
-  Dimensions,
-  Animated,
-  UIManager
+  KeyboardAvoidingView
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../store/actions";
 import { firebaseAuth } from "../lib/firebase";
 
-const { State: TextInputState } = TextInput;
-
-const LoginRegister = ({ navigation, tab }) => {
+const LoginRegister = ({ tab }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const [shift, setShift] = useState(new Animated.Value(0));
-  const [AreaInputHeight, setAreaInputHeight] = useState(0);
-
-  let keyboardDidShowSub, keyboardDidHideSub;
-
-  useEffect(() => {
-    keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      handleKeyboardDidShow
-    );
-    keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      handleKeyboardDidHide
-    );
-
-    return () => {
-      keyboardDidShowSub.remove();
-      keyboardDidHideSub.remove();
-    };
-  }, []);
-
-  const handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap = windowHeight - keyboardHeight - (fieldTop + fieldHeight);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(shift, {
-          toValue: gap,
-          duration: 1000,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  const handleKeyboardDidHide = () => {
-    Animated.timing(shift, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true
-    }).start();
-  };
 
   const handleSubmit = () => {
     setErrorMessage("");
@@ -101,46 +45,45 @@ const LoginRegister = ({ navigation, tab }) => {
   };
 
   return (
-    <Animated.View
-      style={[styles.container, { transform: [{ translateY: shift }] }]}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView style={styles.scrollview}>
-        <TouchableOpacity activeOpacity={1} onPress={() => Keyboard.dismiss()}>
-          <View style={styles.form}>
-            <Text style={styles.header}>{tab}</Text>
-            <Text style={[styles.error, changeDisplay()]}>{errorMessage}</Text>
-            <View style={styles.section}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={text => setEmail(text)}
-                value={email}
-              />
-            </View>
-            <View style={styles.section}>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                secureTextEntry={true}
-                style={styles.input}
-                onChangeText={text => setPassword(text)}
-                value={password}
-              />
-            </View>
+      <TouchableOpacity activeOpacity={1} onPress={() => Keyboard.dismiss()}>
+        <View style={styles.form}>
+          <Text style={styles.header}>{tab}</Text>
+          <Text style={[styles.error, changeDisplay()]}>{errorMessage}</Text>
+          <View style={styles.section}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={text => setEmail(text)}
+              value={email}
+            />
+          </View>
+          <View style={styles.section}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              secureTextEntry={true}
+              style={styles.input}
+              onChangeText={text => setPassword(text)}
+              value={password}
+            />
+          </View>
 
-            <View>
-              <View style={styles.buttons}>
-                <Button
-                  style={styles.button}
-                  color="#1b1c1d"
-                  title="Submit"
-                  onPress={handleSubmit}
-                />
-              </View>
+          <View>
+            <View style={styles.buttons}>
+              <Button
+                style={styles.button}
+                color="#1b1c1d"
+                title="Submit"
+                onPress={handleSubmit}
+              />
             </View>
           </View>
-        </TouchableOpacity>
-      </ScrollView>
-    </Animated.View>
+        </View>
+      </TouchableOpacity>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -148,14 +91,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%"
-  },
-  scrollview: {
+    height: "100%",
     width: "100%",
     maxWidth: 400
   },
+  scrollview: {},
   form: {
     width: "80%",
     maxWidth: 380,
