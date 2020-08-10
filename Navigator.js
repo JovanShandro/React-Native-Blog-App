@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
   CardStyleInterpolators
 } from "@react-navigation/stack";
-import Home from "./screens/Home";
 import Edit from "./screens/Edit";
 import Show from "./screens/Show";
 import New from "./screens/New";
@@ -21,7 +20,7 @@ const Stack = createStackNavigator();
 
 export default function Navigator() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(store => store.isLoggedIn);
+  const isLoggedIn = useSelector(store => store.auth.isLoggedIn);
 
   useEffect(() => {
     firebaseAuth.onAuthStateChanged(function(user) {

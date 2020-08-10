@@ -12,7 +12,7 @@ import {
   Animated,
   UIManager
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginUser } from "../store/actions";
 import { firebaseAuth } from "../lib/firebase";
 

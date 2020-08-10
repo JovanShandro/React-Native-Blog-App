@@ -1,5 +1,4 @@
 import * as R from "ramda";
-import { firebaseDb, firebaseAuth } from "../../lib/firebase";
 
 const initialState = {};
 

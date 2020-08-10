@@ -1,9 +1,9 @@
-import loggedReducer from "./isLoggedIn";
-import postsReducer from "./Posts";
+import authReducer from "./auth";
+import postsReducer from "./posts";
 import { combineReducers } from "redux";
 
 const allReducers = combineReducers({
-  isLoggedIn: loggedReducer,
+  auth: authReducer,
   posts: postsReducer
 });
 

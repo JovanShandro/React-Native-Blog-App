@@ -12,7 +12,7 @@ import {
   Animated,
   UIManager
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fbAddPost } from "../store/actions";
 import { currentDate } from "../lib/util";
 
