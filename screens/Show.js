@@ -29,7 +29,7 @@ const Show = ({ navigation }) => {
             R.map(([id, other]) => R.merge(other, { id })),
             R.sort(R.descend(R.prop("date")))
           )(posts)}
-          keyExtractor={item => item}
+          keyExtractor={item => item.title}
           renderItem={({ item }) => (
             <View style={styles.post}>
               <Image
