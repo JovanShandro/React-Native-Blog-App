@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, SafeAreaView } from "react-native";
-import { TabBar, TabView, SceneMap } from "react-native-tab-view";
+import React, { useState } from "react";
+import { View, StyleSheet, SafeAreaView } from "react-native";
+import { TabBar, TabView } from "react-native-tab-view";
 import LoginRegister from "../components/LoginRegister";
-import { firebaseAuth } from "../lib/firebase";
-
-const renderTabBar = props => (
-  <TabBar
-    {...props}
-    indicatorStyle={{ color: "green" }}
-    style={{ color: "pink" }}
-  />
-);
 
 const LoginScreen = ({ navigation }) => {
   const [index, setIndex] = useState(0);
@@ -19,10 +10,6 @@ const LoginScreen = ({ navigation }) => {
     { key: "register", title: "Register" }
   ]);
 
-  useEffect(() => {
-    firebaseAuth.signOut();
-  }, []);
-
   return (
     <SafeAreaView
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -30,7 +17,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.tabView}>
         <TabView
           navigationState={{ index, routes }}
-          renderScene={({ route, focused }) => {
+          renderScene={({ route }) => {
             switch (route.key) {
               case "login":
                 return <LoginRegister tab="Log In" navigation={navigation} />;

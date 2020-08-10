@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet, Text, View, Image, Button, FlatList } from "react-native";
 import { useSelector } from "react-redux";
-import { firebaseDb, firebaseAuth } from "../store/actions";
-import { getPosts } from "../store/actions";
 import * as R from "ramda";
 
 const Show = ({ navigation }) => {

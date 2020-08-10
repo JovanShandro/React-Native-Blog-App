@@ -92,10 +92,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     height: "100%",
-    width: "100%",
-    maxWidth: 400
+    width: "100%"
   },
-  scrollview: {},
   form: {
     width: "80%",
     maxWidth: 380,
