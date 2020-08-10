@@ -11,11 +11,11 @@ const postsReducer = (state = initialState, action) => {
         state
       );
     case "DELETE":
-      const stateCopy = JSON.parse(JSON.stringify(state));
+      const stateCopy = R.clone(state);
       delete stateCopy[action.id];
       return stateCopy;
     case "ADD":
-      return R.mergeRight(state, { [action.id]: action.post });
+      return { ...state, [action.id]: action.post };
     case "CLEAR_POSTS":
       return {};
     default:
