@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     maxWidth: 380,
     alignSelf: "center",
     borderColor: "#1b1c1d83",
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 20,
     marginVertical: 30
   },
@@ -123,14 +123,14 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     padding: 1,
-    borderRadius: 20,
+    borderRadius: 5,
     paddingHorizontal: 10,
     borderColor: "gray",
     marginBottom: 15
   },
   areaInput: {
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 5,
     padding: 10,
     textAlignVertical: "top",
     marginBottom: 20
