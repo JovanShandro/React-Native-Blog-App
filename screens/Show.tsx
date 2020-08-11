@@ -1,12 +1,27 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  FlatList,
+  ViewStyle,
+  TextStyle,
+  ImageStyle
+} from "react-native";
 import { useSelector } from "react-redux";
-import * as R from "ramda";
+import { RootState } from "../lib/types";
+const R = require("ramda");
 
-const Show = ({ navigation }) => {
-  const posts = useSelector(state => state.posts);
+interface Props {
+  navigation: any;
+}
 
-  const shortenDesc = desc => {
+const Show: React.FC<Props> = ({ navigation }) => {
+  const posts = useSelector((state: RootState) => state.posts);
+
+  const shortenDesc = (desc: string) => {
     if (desc.length <= 155) return desc;
     return desc.slice(0, 155) + "...";
   };
@@ -24,7 +39,7 @@ const Show = ({ navigation }) => {
           style={{ width: "100%" }}
           data={R.pipe(
             R.toPairs,
-            R.map(([id, other]) => R.merge(other, { id })),
+            R.map(([id, other]: any) => R.merge(other, { id })),
             R.sort(R.descend(R.prop("date")))
           )(posts)}
           keyExtractor={item => item.title}
@@ -57,7 +72,18 @@ const Show = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+interface Style {
+  container: ViewStyle;
+  noPosts: ViewStyle;
+  noPostsText: TextStyle;
+  image: ImageStyle;
+  title: TextStyle;
+  description: TextStyle;
+  button: ViewStyle;
+  post: ViewStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   container: {
     flex: 1,
     backgroundColor: "#fff",

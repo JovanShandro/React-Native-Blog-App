@@ -8,15 +8,26 @@ import {
   View,
   Keyboard,
   KeyboardAvoidingView,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform,
+  ViewStyle,
+  TextStyle
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { fbUpdatePost } from "../store/actions";
 import { useHeaderHeight } from "@react-navigation/stack";
+import { RootState } from "../lib/types";
 
-const Edit = ({ route, navigation }) => {
+interface Props {
+  route: {
+    params: { item: number };
+  };
+  navigation: any;
+}
+
+const Edit: React.FC<Props> = ({ route, navigation }) => {
   const { item } = route.params;
-  const post = useSelector(store => store.posts[item]);
+  const post = useSelector((store: RootState) => store.posts[item]);
   const dispatch = useDispatch();
   const [title, setTitle] = useState(post.title);
   const [image, setImage] = useState(post.image);
@@ -71,17 +82,11 @@ const Edit = ({ route, navigation }) => {
             <View>
               <View style={styles.buttons}>
                 <Button
-                  style={styles.button}
                   color="red"
                   title="Cancel"
                   onPress={() => navigation.goBack()}
                 />
-                <Button
-                  style={styles.button}
-                  color="blue"
-                  title="Submit"
-                  onPress={handleSubmit}
-                />
+                <Button color="blue" title="Submit" onPress={handleSubmit} />
               </View>
             </View>
           </View>
@@ -91,7 +96,19 @@ const Edit = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+interface Style {
+  container: ViewStyle;
+  whiteBackground: ViewStyle;
+  form: ViewStyle;
+  header: ViewStyle;
+  section: ViewStyle;
+  label: TextStyle;
+  input: ViewStyle;
+  areaInput: ViewStyle;
+  buttons: ViewStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   container: {
     flex: 1
   },
@@ -138,9 +155,6 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     justifyContent: "space-around"
-  },
-  button: {
-    width: 70
   }
 });
 

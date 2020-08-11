@@ -5,14 +5,25 @@ import {
   Text,
   View,
   Image,
-  Button
+  Button,
+  TextStyle,
+  ImageStyle,
+  ViewStyle
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { fbDeletePost } from "../store/actions";
+import { RootState } from "../lib/types";
 
-const ShowSingle = ({ route, navigation }) => {
+interface Props {
+  route: {
+    params: { item: number };
+  };
+  navigation: any;
+}
+
+const ShowSingle: React.FC<Props> = ({ route, navigation }) => {
   const { item } = route.params;
-  const post = useSelector(store => store.posts[item]);
+  const post = useSelector((store: RootState) => store.posts[item]);
   const dispatch = useDispatch();
 
   return (
@@ -41,7 +52,7 @@ const ShowSingle = ({ route, navigation }) => {
                   color="red"
                   title="Delete"
                   onPress={() => {
-                    dispatch(fbDeletePost(item)).then(() => {
+                    (dispatch(fbDeletePost(item)) as any).then(() => {
                       navigation.goBack();
                     });
                   }}
@@ -57,7 +68,18 @@ const ShowSingle = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+interface Style {
+  container: ViewStyle;
+  post: ViewStyle;
+  image: ImageStyle;
+  title: TextStyle;
+  description: TextStyle;
+  buttons: ViewStyle;
+  singleButton: ViewStyle;
+  scroll: ViewStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -90,7 +112,6 @@ const styles = StyleSheet.create({
   },
   buttons: {
     marginTop: 15,
-    marginBottom: 10,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",

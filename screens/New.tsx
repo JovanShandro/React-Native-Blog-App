@@ -8,14 +8,21 @@ import {
   View,
   Keyboard,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform,
+  TextStyle,
+  ViewStyle
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { fbAddPost } from "../store/actions";
 import { currentDate } from "../lib/util";
 
-const NewScreen = ({ navigation }) => {
+interface Props {
+  navigation: any;
+}
+
+const NewScreen: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
@@ -70,17 +77,11 @@ const NewScreen = ({ navigation }) => {
             <View>
               <View style={styles.buttons}>
                 <Button
-                  style={styles.button}
                   color="red"
                   title="Cancel"
                   onPress={() => navigation.goBack()}
                 />
-                <Button
-                  style={styles.button}
-                  color="blue"
-                  title="Submit"
-                  onPress={handleSubmit}
-                />
+                <Button color="blue" title="Submit" onPress={handleSubmit} />
               </View>
             </View>
           </View>
@@ -90,7 +91,19 @@ const NewScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+interface Style {
+  container: ViewStyle;
+  whiteBackground: ViewStyle;
+  form: ViewStyle;
+  header: ViewStyle;
+  section: ViewStyle;
+  label: TextStyle;
+  input: ViewStyle;
+  areaInput: ViewStyle;
+  buttons: ViewStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   container: {
     flex: 1
   },
@@ -138,9 +151,6 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     justifyContent: "space-around"
-  },
-  button: {
-    width: 70
   }
 });
 

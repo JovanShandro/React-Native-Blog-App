@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet, SafeAreaView, ViewStyle } from "react-native";
 import { TabBar, TabView } from "react-native-tab-view";
 import LoginRegister from "../components/LoginRegister";
 
-const LoginScreen = ({ navigation }) => {
+interface Props {
+  navigation: any;
+}
+
+const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "login", title: "Login" },
@@ -33,14 +37,17 @@ const LoginScreen = ({ navigation }) => {
             />
           )}
           onIndexChange={setIndex}
-          tabStyle={{ color: "red" }}
         />
       </View>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+interface Style {
+  tabView: ViewStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   tabView: {
     width: "90%",
     maxWidth: 400,

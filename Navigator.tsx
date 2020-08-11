@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, ViewStyle } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -15,12 +15,13 @@ import IconTitle from "./components/IconTitle";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { logoutUser, clearPosts, firebaseEvents } from "./store/actions";
 import { firebaseAuth } from "./lib/firebase";
+import { RootState } from "./lib/types";
 
 const Stack = createStackNavigator();
 
 export default function Navigator() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(store => store.auth.isLoggedIn);
+  const isLoggedIn = useSelector((store: RootState) => store.auth.isLoggedIn);
 
   useEffect(() => {
     firebaseAuth.onAuthStateChanged(function(user) {
@@ -61,7 +62,7 @@ export default function Navigator() {
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          headerTitle: props => <IconTitle {...props} />,
+          headerTitle: () => <IconTitle />,
           headerStyle: {
             backgroundColor: "#1b1c1d"
           },
@@ -105,7 +106,11 @@ export default function Navigator() {
   );
 }
 
-const styles = StyleSheet.create({
+interface Style {
+  headerRight: ViewStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   headerRight: {
     marginRight: 10,
     flexDirection: "row"

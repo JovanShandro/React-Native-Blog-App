@@ -7,13 +7,21 @@ import {
   View,
   Keyboard,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform,
+  ViewStyle,
+  TextStyle
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../store/actions";
 import { firebaseAuth } from "../lib/firebase";
 
-const LoginRegister = ({ tab }) => {
+interface Props {
+  tab: string;
+  navigation: any;
+}
+
+const LoginRegister: React.FC<Props> = ({ tab }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +48,7 @@ const LoginRegister = ({ tab }) => {
     }
   };
 
-  const changeDisplay = {
+  const changeDisplay: any = {
     display: errorMessage.length ? "flex" : "none"
   };
 
@@ -73,12 +81,7 @@ const LoginRegister = ({ tab }) => {
 
           <View>
             <View style={styles.buttons}>
-              <Button
-                style={styles.button}
-                color="#1b1c1d"
-                title="Submit"
-                onPress={handleSubmit}
-              />
+              <Button color="#1b1c1d" title="Submit" onPress={handleSubmit} />
             </View>
           </View>
         </View>
@@ -87,7 +90,18 @@ const LoginRegister = ({ tab }) => {
   );
 };
 
-const styles = StyleSheet.create({
+interface Style {
+  container: ViewStyle;
+  form: ViewStyle;
+  buttons: ViewStyle;
+  section: ViewStyle;
+  input: ViewStyle;
+  header: TextStyle;
+  label: TextStyle;
+  error: TextStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   container: {
     flex: 1,
     backgroundColor: "#fff",
